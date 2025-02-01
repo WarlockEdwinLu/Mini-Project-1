@@ -1,3 +1,6 @@
+## Contributions 
+# Jiajun Lu: Task I and II, Debugging the whole file for Streamlit Web APP
+# Tony Gu: Task III, Testing the examples using all the different embedding models
 
 ## Mini Project 1 - Part 1: Getting Familiar with Word Embeddings.
 # This assignment introduces students to text similarity measures using cosine similarity and sentence embeddings. 
