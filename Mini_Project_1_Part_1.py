@@ -249,7 +249,7 @@ def cosine_similarity(x, y):
     # 1. Compute cosine similarity
     x = np.array(x).flatten()
     y = np.array(y).flatten()
-    
+
     dot_product = np.dot(x, y)
     norm_x = np.linalg.norm(x)
     norm_y = np.linalg.norm(y)
@@ -351,7 +351,7 @@ def get_sorted_cosine_similarity(input_text, embeddings_metadata):
                 category_embeddings[category] = category_embedding
                 st.session_state["cat_embed_" + model_name] = category_embeddings
             
-            cosine_sim[category] = cosine_similarity([input_embedding], [category_embedding])[0][0] # compute cosine similarity
+            cosine_sim[category] = cosine_similarity(input_embedding, category_embedding) # compute cosine similarity
 
 
     return 
