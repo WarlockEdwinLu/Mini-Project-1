@@ -359,7 +359,6 @@ def get_sorted_cosine_similarity(input_text, embeddings_metadata):
         st.warning(f"No valid cosine similarity scores found for {embeddings_metadata['embedding_model']}. Returning dummy values.")
         return {category: 0.0 for category in categories}
 
-    print("Debug - Final result:", result)
     return list(sorted(cosine_sim.items(), key=lambda x: x[1], reverse=True))
 
 
