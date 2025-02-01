@@ -1,5 +1,5 @@
 ## Contributions 
-# Jiajun Lu: Task I and II, Debugging the whole file for Streamlit Web APP
+# Jiajun Lu: Task I and II, Debugging the whole file for Streamlit Web APP, Uploading a new set of "word_indexes" and "embeddings" on Google Drive
 # Tony Gu: Task III, Testing the examples using all the different embedding models
 
 ## Mini Project 1 - Part 1: Getting Familiar with Word Embeddings.
@@ -42,14 +42,14 @@ def load_glove_embeddings(glove_path="Data/embeddings.pkl"):
 
 def get_model_id_gdrive(model_type):
     if model_type == "25d":
-        word_index_id = "13qMXs3-oB9C6kfSRMwbAtzda9xuAUtt8"
-        embeddings_id = "1-RXcfBvWyE-Av3ZHLcyJVsps0RYRRr_2"
+        word_index_id = "1Q1tgCUxS14TXn9DfY6SpeyeS_Oou0a6Z"
+        embeddings_id = "113wDowF6x_l15wV3fDUBHG3ZlASrObKI"
     elif model_type == "50d":
-        embeddings_id = "1DBaVpJsitQ1qxtUvV1Kz7ThDc3az16kZ"
+        embeddings_id = "1RrnKuL1l3lAWA2a6YHV0sH2kFHqxci71"
         word_index_id = "11k_b5rNR60KZmeqnCXfGItSs3ojBi9Zw"
     elif model_type == "100d":
-        word_index_id = "1-oWV0LqG3fmrozRZ7WB1jzeTJHRUI3mq"
-        embeddings_id = "1SRHfX130_6Znz7zbdfqboKosz-PfNvNp"
+        word_index_id = "1KREdT2Pje4_odwYKi8OOW6Pz-3YmaEuZ"
+        embeddings_id = "14uIJJfwS2m3MvurM4GRaH269qdc2viEr"
         
     return word_index_id, embeddings_id
 
