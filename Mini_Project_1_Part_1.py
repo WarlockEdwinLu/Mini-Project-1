@@ -101,12 +101,13 @@ def get_sentence_transformer_embeddings(sentence, model_name="all-MiniLM-L6-v2")
     sentenceTransformer = load_sentence_transformer_model(model_name)
 
     try:
-        return sentenceTransformer.encode(sentence)
-    except:
-        if model_name == "all-MiniLM-L6-v2":
+        embedding = sentenceTransformer.encode(sentence)
+        if embedding.shape[0] != 384:  # Ensure it's 384 dimensions
+            st.warning(f"Unexpected embedding size {embedding.shape[0]}, resetting to default 384.")
             return np.zeros(384)
-        else:
-            return np.zeros(512)
+        return embedding
+    except:
+        return np.zeros(384)
 
 
 def get_glove_embeddings(word, word_index_dict, embeddings, model_type):
@@ -327,9 +328,7 @@ def get_sorted_cosine_similarity(input_text, embeddings_metadata):
         embeddings = embeddings_metadata["embeddings"]
         model_type = embeddings_metadata["model_type"]
 
-        input_embedding = averaged_glove_embeddings_gdrive(input_text,
-                                                            word_index_dict,
-                                                            embeddings, model_type)
+        input_embedding = averaged_glove_embeddings_gdrive(input_text, word_index_dict, embeddings, model_type)
 
         ##########################################
         ## TODO: Get embeddings for categories ###
@@ -339,12 +338,12 @@ def get_sorted_cosine_similarity(input_text, embeddings_metadata):
             category_embeddings[category] = averaged_glove_embeddings_gdrive(category, word_index_dict, embeddings, model_type)
 
     else:
-        model_name = embeddings_metadata["model_name"]
-        get_category_embeddings(embeddings_metadata)
+        model_name = "all-MiniLM-L6-v2"  # Enforce consistent model
+        get_category_embeddings({"model_name": model_name})  # Use same model for categories
 
         category_embeddings = st.session_state["cat_embed_" + model_name]
 
-        input_embedding = get_sentence_transformer_embeddings(input_text, model_name=model_name)
+        input_embedding = get_sentence_transformer_embeddings(input_text, model_name=model_name)  # Use same model
 
         for category in categories:
             ##########################################
