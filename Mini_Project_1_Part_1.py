@@ -249,6 +249,7 @@ def cosine_similarity(x, y):
     ##################################
     ### TODO: Add code here ##########
     ##################################
+    '''
     # 1. Compute cosine similarity
     dot_product = np.dot(x, y)
     norm_x = np.linalg.norm(x)
@@ -261,6 +262,9 @@ def cosine_similarity(x, y):
 
     # 3. Return exponentiated cosine similarity
     return exp_cosine_sim
+    '''
+    print("calculating cosine similarity between ", x.shape, " and ", y.shape)
+    return np.exp(np.dot(x,y)/max(la.norm(x)*la.norm(y),1e-3))
     
 # Task II: Average Glove Embedding Calculation
 def averaged_glove_embeddings_gdrive(sentence, word_index_dict, embeddings, model_type=50):
