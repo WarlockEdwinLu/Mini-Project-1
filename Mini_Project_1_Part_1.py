@@ -1,6 +1,6 @@
 ## Contributions 
-# Jiajun Lu: Task I and II, Debugging the whole file for Streamlit Web APP, Uploading a new set of "word_indexes" and "embeddings" on Google Drive
-# Tony Gu: Task III, Testing the examples using all the different embedding models
+# Jiajun Lu: Task I and II, Debugging for Streamlit Web APP, Uploading a new set of "word_indexes" and "embeddings" on Google Drive
+# Tony Gu: Task III, Debugging for Streamlit Web APP, Testing the examples using all the different embedding models
 
 ## Mini Project 1 - Part 1: Getting Familiar with Word Embeddings.
 # This assignment introduces students to text similarity measures using cosine similarity and sentence embeddings. 
@@ -227,12 +227,20 @@ def plot_alatirchart(sorted_cosine_scores_models):
     models = list(sorted_cosine_scores_models.keys())
     tabs = st.tabs(models)
     figs = {}
+
     for model in models:
-        figs[model] = plot_piechart_helper(sorted_cosine_scores_models[model])
+        if not sorted_cosine_scores_models[model]:  # Check for empty scores
+            st.warning(f"No similarity scores available for {model}. Skipping plot.")
+            continue  # Skip empty results
+
+        # Convert dictionary to sorted list
+        scores_list = sorted_cosine_scores_models[model].items() if isinstance(sorted_cosine_scores_models[model], dict) else sorted_cosine_scores_models[model]
+        figs[model] = plot_piechart_helper(list(scores_list))  # Ensure it's always a list
 
     for index in range(len(tabs)):
         with tabs[index]:
-            st.pyplot(figs[models[index]])
+            if models[index] in figs:
+                st.pyplot(figs[models[index]])
 
 
 ### Your Part To Complete: Follow the instructions in each function below to complete the similarity calculation between text embeddings
@@ -313,6 +321,7 @@ def get_sorted_cosine_similarity(input_text, embeddings_metadata):
     """
     categories = st.session_state.categories.split(" ")
     cosine_sim = {}
+
     if embeddings_metadata["embedding_model"] == "glove":
         word_index_dict = embeddings_metadata["word_index_dict"]
         embeddings = embeddings_metadata["embeddings"]
@@ -321,7 +330,7 @@ def get_sorted_cosine_similarity(input_text, embeddings_metadata):
         input_embedding = averaged_glove_embeddings_gdrive(input_text,
                                                             word_index_dict,
                                                             embeddings, model_type)
-        
+
         ##########################################
         ## TODO: Get embeddings for categories ###
         ##########################################
@@ -331,37 +340,30 @@ def get_sorted_cosine_similarity(input_text, embeddings_metadata):
 
     else:
         model_name = embeddings_metadata["model_name"]
-        #if not "cat_embed_" + model_name in st.session_state:
         get_category_embeddings(embeddings_metadata)
 
         category_embeddings = st.session_state["cat_embed_" + model_name]
 
-        print("text_search = ", input_text)
-        if model_name:
-            input_embedding = get_sentence_transformer_embeddings(input_text, model_name=model_name)
-        else:
-            input_embedding = get_sentence_transformer_embeddings(input_text)
-        for index in range(len(categories)):
+        input_embedding = get_sentence_transformer_embeddings(input_text, model_name=model_name)
+
+        for category in categories:
             ##########################################
             # TODO: Compute cosine similarity between input sentence and categories
             # TODO: Update category embeddings if category not found  
             ##########################################
-            category = categories[index]
-            category_embedding = category_embeddings.get(category)
-            if category_embedding is None: # update category embeddings if category not found
+            category_embedding = category_embeddings[category]
+            if category_embedding is None:
                 category_embedding = get_sentence_transformer_embeddings(category, model_name=model_name)
                 category_embeddings[category] = category_embedding
                 st.session_state["cat_embed_" + model_name] = category_embeddings
             
-            cosine_sim[category] = cosine_similarity(input_embedding, category_embedding) # compute cosine similarity
+            cosine_sim[category] = cosine_similarity(input_embedding, category_embedding)
 
     if not cosine_sim:
         st.warning(f"No valid cosine similarity scores found for {embeddings_metadata['embedding_model']}. Returning dummy values.")
-        return {category: 0.0 for category in categories}
+        return [(category, 0.0) for category in categories]
 
-    return list(sorted(cosine_sim.items(), key=lambda x: x[1], reverse=True))
-
-
+    return sorted(cosine_sim.items(), key=lambda x: x[1], reverse=True)
 
 ### Below is the main function, creating the app demo for text search engine using the text embeddings.
 
