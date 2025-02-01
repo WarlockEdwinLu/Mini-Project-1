@@ -247,9 +247,13 @@ def cosine_similarity(x, y):
     ### TODO: Add code here ##########
     ##################################
     # 1. Compute cosine similarity
+    x = np.array(x).flatten()
+    y = np.array(y).flatten()
+    
     dot_product = np.dot(x, y)
     norm_x = np.linalg.norm(x)
     norm_y = np.linalg.norm(y)
+
     cosine_sim = dot_product / (norm_x * norm_y)
 
     # 2. Exponentiate cosine similarity
