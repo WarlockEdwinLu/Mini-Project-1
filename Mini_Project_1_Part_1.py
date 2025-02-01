@@ -172,7 +172,7 @@ def plot_piechart_helper(sorted_cosine_scores_items):
     )
     categories = st.session_state.categories.split(" ")
     categories_sorted = [
-        categories[sorted_cosine_scores_items[index][0]]
+        sorted_cosine_scores_items[index][0]
         for index in range(len(sorted_cosine_scores_items))
     ]
     fig, ax = plt.subplots(figsize=(3, 3))
