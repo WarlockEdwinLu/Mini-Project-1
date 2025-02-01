@@ -1,6 +1,6 @@
 ## Contributions 
-# Jiajun Lu: Task I and II, Debugging the whole file for Streamlit Web APP, Uploading a new set of "word_indexes" and "embeddings" on Google Drive
-# Tony Gu: Task III, Testing the examples using all the different embedding models
+# Jiajun Lu: Task I and II, Debugging Task III, Debugging for Streamlit Web APP, Uploading a new set of "word_indexes" and "embeddings" on Google Drive
+# Tony Gu: Task III, Debugging for Streamlit Web APP, Testing the examples using all the different embedding models
 
 ## Mini Project 1 - Part 1: Getting Familiar with Word Embeddings.
 # This assignment introduces students to text similarity measures using cosine similarity and sentence embeddings. 
@@ -310,34 +310,44 @@ def get_sorted_cosine_similarity(_, embeddings_metadata):
     5. Return sorted cosine similarity
     (50 pts)
     """
-    categories = st.session_state.categories.split(" ")
+    categories = st.session_state.categories.split()
     cosine_sim = {}
 
-    if embeddings_metadata["embedding_model"] == "glove":
+    embedding_model = embeddings_metadata["embedding_model"]
+
+    if embedding_model == "glove":
         word_index_dict = embeddings_metadata["word_index_dict"]
         embeddings = embeddings_metadata["embeddings"]
         model_type = embeddings_metadata["model_type"]
 
-        input_embedding = averaged_glove_embeddings_gdrive(st.session_state.text_search, word_index_dict, embeddings, model_type)
-        
+        input_embedding = averaged_glove_embeddings_gdrive(
+            st.session_state.text_search, word_index_dict, embeddings, model_type
+        )
+
         ##########################################
         ## TODO: Get embeddings for categories ###
         ##########################################
-        category_embeddings = {
-            category: averaged_glove_embeddings_gdrive(category, word_index_dict, embeddings, model_type)
-            for category in categories
-        }
-
         for category in categories:
-            cosine_sim[category] = cosine_similarity(input_embedding, category_embeddings[category])
+            category_embedding = averaged_glove_embeddings_gdrive(
+                category, word_index_dict, embeddings, model_type
+            )
+            cosine_sim[category] = cosine_similarity(input_embedding, category_embedding)
 
     else:
         model_name = embeddings_metadata["model_name"]
-        if "cat_embed_" + model_name not in st.session_state:
+        category_embeddings_key = f"cat_embed_{model_name}"
+
+        if category_embeddings_key not in st.session_state:
             get_category_embeddings(embeddings_metadata)
 
-        category_embeddings = st.session_state["cat_embed_" + model_name]
-        input_embedding = get_sentence_transformer_embeddings(st.session_state.text_search, model_name=model_name)
+        category_embeddings = st.session_state[category_embeddings_key]
+
+        print("text_search =", st.session_state.text_search)
+        input_embedding = (
+            get_sentence_transformer_embeddings(st.session_state.text_search, model_name)
+            if model_name
+            else get_sentence_transformer_embeddings(st.session_state.text_search)
+        )
 
         for category in categories:
             ##########################################
@@ -345,19 +355,16 @@ def get_sorted_cosine_similarity(_, embeddings_metadata):
             # TODO: Update category embeddings if category not found  
             ##########################################
             if category not in category_embeddings:
-                category_embedding = get_sentence_transformer_embeddings(category, model_name=model_name)
-                category_embeddings[category] = category_embedding
-                st.session_state["cat_embed_" + model_name] = category_embeddings
-            else:
-                category_embedding = category_embeddings[category]
-            
-            cosine_sim[category] = cosine_similarity(input_embedding, category_embedding)
+                category_embeddings[category] = (
+                    get_sentence_transformer_embeddings(category, model_name)
+                    if model_name
+                    else get_sentence_transformer_embeddings(category)
+                )
 
-    if not cosine_sim:
-        st.warning(f"No valid cosine similarity scores found for {embeddings_metadata['embedding_model']}. Returning dummy values.")
-        return {category: 0.0 for category in categories}
+            cosine_sim[category] = cosine_similarity(input_embedding, category_embeddings[category])
 
-    return dict(sorted(cosine_sim.items(), key=lambda x: x[1], reverse=True))
+    return sorted(cosine_sim.items(), key=lambda x: x[1], reverse=True)
+
 
 
 
