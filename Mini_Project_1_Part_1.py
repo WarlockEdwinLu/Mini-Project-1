@@ -332,7 +332,7 @@ def get_sorted_cosine_similarity(input_text, embeddings_metadata):
     else:
         model_name = embeddings_metadata["model_name"]
         #if not "cat_embed_" + model_name in st.session_state:
-            #get_category_embeddings(embeddings_metadata)
+        get_category_embeddings(embeddings_metadata)
 
         category_embeddings = st.session_state["cat_embed_" + model_name]
 
