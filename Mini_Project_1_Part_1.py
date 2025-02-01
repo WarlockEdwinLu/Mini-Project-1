@@ -172,7 +172,7 @@ def plot_piechart_helper(sorted_cosine_scores_items):
     )
     categories = st.session_state.categories.split(" ")
     categories_sorted = [
-        sorted_cosine_scores_items[index][0]
+        categories[sorted_cosine_scores_items[index][0]]
         for index in range(len(sorted_cosine_scores_items))
     ]
     fig, ax = plt.subplots(figsize=(3, 3))
@@ -250,9 +250,6 @@ def cosine_similarity(x, y):
     ### TODO: Add code here ##########
     ##################################
     # 1. Compute cosine similarity
-    x = np.array(x).flatten()
-    y = np.array(y).flatten()
-
     dot_product = np.dot(x, y)
     norm_x = np.linalg.norm(x)
     norm_y = np.linalg.norm(y)
