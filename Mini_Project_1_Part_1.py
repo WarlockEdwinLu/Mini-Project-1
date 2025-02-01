@@ -347,7 +347,7 @@ def get_sorted_cosine_similarity(input_text, embeddings_metadata):
             # TODO: Update category embeddings if category not found  
             ##########################################
             category = categories[index]
-            category_embedding = category_embeddings[category] 
+            category_embedding = category_embeddings.get(category)
             if category_embedding is None: # update category embeddings if category not found
                 category_embedding = get_sentence_transformer_embeddings(category, model_name=model_name)
                 category_embeddings[category] = category_embedding
