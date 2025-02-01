@@ -293,7 +293,7 @@ def averaged_glove_embeddings_gdrive(sentence, word_index_dict, embeddings, mode
     return embedding
 
 # Task III: Sort the cosine similarity
-def get_sorted_cosine_similarity(embeddings_metadata):
+def get_sorted_cosine_similarity(input_text， embeddings_metadata):
     """
     Get sorted cosine similarity between input sentence and categories
     Steps:
@@ -311,7 +311,7 @@ def get_sorted_cosine_similarity(embeddings_metadata):
         embeddings = embeddings_metadata["embeddings"]
         model_type = embeddings_metadata["model_type"]
 
-        input_embedding = averaged_glove_embeddings_gdrive(st.session_state.text_search,
+        input_embedding = averaged_glove_embeddings_gdrive(input_text,
                                                             word_index_dict,
                                                             embeddings, model_type)
         
@@ -329,11 +329,11 @@ def get_sorted_cosine_similarity(embeddings_metadata):
 
         category_embeddings = st.session_state["cat_embed_" + model_name]
 
-        print("text_search = ", st.session_state.text_search)
+        print("text_search = ", input_text)
         if model_name:
-            input_embedding = get_sentence_transformer_embeddings(st.session_state.text_search, model_name=model_name)
+            input_embedding = get_sentence_transformer_embeddings(input_text, model_name=model_name)
         else:
-            input_embedding = get_sentence_transformer_embeddings(st.session_state.text_search)
+            input_embedding = get_sentence_transformer_embeddings(input_text)
         for index in range(len(categories)):
             ##########################################
             # TODO: Compute cosine similarity between input sentence and categories
