@@ -347,9 +347,8 @@ def get_sorted_cosine_similarity(input_text, embeddings_metadata):
             # TODO: Update category embeddings if category not found  
             ##########################################
             category = categories[index]
-            if category in category_embeddings: # find category
-                category_embedding = category_embeddings[category] 
-            else: # update category embeddings if category not found
+            category_embedding = category_embeddings[category] 
+            if category_embedding is None: # update category embeddings if category not found
                 category_embedding = get_sentence_transformer_embeddings(category, model_name=model_name)
                 category_embeddings[category] = category_embedding
                 st.session_state["cat_embed_" + model_name] = category_embeddings
@@ -360,7 +359,8 @@ def get_sorted_cosine_similarity(input_text, embeddings_metadata):
         st.warning(f"No valid cosine similarity scores found for {embeddings_metadata['embedding_model']}. Returning dummy values.")
         return {category: 0.0 for category in categories}
 
-    return dict(sorted(cosine_sim.items(), key=lambda x: x[1], reverse=True))
+    print("Debug - Final result:", result)
+    return list(sorted(cosine_sim.items(), key=lambda x: x[1], reverse=True))
 
 
 
