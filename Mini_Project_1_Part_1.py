@@ -293,7 +293,7 @@ def averaged_glove_embeddings_gdrive(sentence, word_index_dict, embeddings, mode
     return embedding
 
 # Task III: Sort the cosine similarity
-def get_sorted_cosine_similarity(input_text， embeddings_metadata):
+def get_sorted_cosine_similarity(input_text, embeddings_metadata):
     """
     Get sorted cosine similarity between input sentence and categories
     Steps:
