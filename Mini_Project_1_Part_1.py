@@ -356,7 +356,12 @@ def get_sorted_cosine_similarity(input_text, embeddings_metadata):
             
             cosine_sim[category] = cosine_similarity(input_embedding, category_embedding) # compute cosine similarity
 
-    return dict(sorted(cosine_sim.items(), key=lambda x: x[1], reverse=True)) 
+    if not cosine_sim:
+        st.warning(f"No valid cosine similarity scores found for {embeddings_metadata['embedding_model']}. Returning dummy values.")
+        return {category: 0.0 for category in categories}
+
+    return dict(sorted(cosine_sim.items(), key=lambda x: x[1], reverse=True))
+
 
 
 ### Below is the main function, creating the app demo for text search engine using the text embeddings.
